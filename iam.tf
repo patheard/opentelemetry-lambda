@@ -11,13 +11,18 @@ resource "aws_iam_role" "lambda" {
   }
 }
 
-resource "aws_iam_policy" "lambda_s3_ec2_read" {
+resource "aws_iam_policy" "lambda_read" {
   name   = "LambdaS3EC2Read"
   path   = "/"
-  policy = data.aws_iam_policy_document.lambda_s3_ec2_read.json
+  policy = data.aws_iam_policy_document.lambda_read.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_ecr" {
   role       = aws_iam_role.lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
@@ -27,9 +32,9 @@ resource "aws_iam_role_policy_attachment" "lambda_xray_write" {
   policy_arn = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_s3_ec2_read" {
+resource "aws_iam_role_policy_attachment" "lambda_read" {
   role       = aws_iam_role.lambda.name
-  policy_arn = aws_iam_policy.lambda_s3_ec2_read.arn
+  policy_arn = aws_iam_policy.lambda_read.arn
 }
 
 data "aws_iam_policy_document" "lambda_assume" {
@@ -44,15 +49,39 @@ data "aws_iam_policy_document" "lambda_assume" {
   }
 }
 
-data "aws_iam_policy_document" "lambda_s3_ec2_read" {
+data "aws_iam_policy_document" "lambda_read" {
   statement {
-    effect = "Allow"
+    sid     = "S3List"
+    effect  = "Allow"
     actions = [
-      "ec2:DescribeInstances",
       "s3:ListAllMyBuckets"
     ]
     resources = [
       "*"
     ]
   }
+
+  statement {
+    sid     = "EC2Describe"
+    effect  = "Allow"
+    actions = [
+      "ec2:DescribeInstances"
+    ]
+    resources = [
+      "*"
+    ]
+  }  
+
+  statement {
+    sid    = "ECRImageAccess"
+    effect = "Allow"
+
+    actions = [
+      "ecr:GetDownloadUrlForlayer",
+      "ecr:BatchGetImage"
+    ]
+    resources = [
+      "*"
+    ]
+  }  
 }
