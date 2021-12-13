@@ -3,6 +3,8 @@ Main API handler that defines all routes.
 """
 
 import boto3
+import os
+
 from fastapi import FastAPI
 from mangum import Mangum
 
@@ -16,6 +18,16 @@ app = FastAPI(
 def hello():
     "Hello path request"
     return {"Hello": "World"}
+
+@app.get("/list")
+def hello():
+    client = boto3.client("s3")
+    client.list_buckets()
+    
+    client = boto3.client("ec2")
+    client.describe_instances()
+
+    return {"Region ": os.environ['AWS_REGION']}  
 
 
 # Mangum allows us to use Lambdas to process requests
