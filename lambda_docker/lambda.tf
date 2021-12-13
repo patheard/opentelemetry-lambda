@@ -3,7 +3,6 @@
 #
 resource "aws_lambda_function" "lambda_docker" {
   function_name = "lambda_docker"
-  handler       = "lambda.handler"
   package_type  = "Image"
   image_uri     = "${aws_ecr_repository.lambda.repository_url}:latest"
   timeout       = 10 
