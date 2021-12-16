@@ -66,17 +66,4 @@ data "aws_iam_policy_document" "lambda_read" {
       "*"
     ]
   }
-
-  statement {
-    sid    = "ECRImageAccess"
-    effect = "Allow"
-
-    actions = [
-      "ecr:GetDownloadUrlForlayer",
-      "ecr:BatchGetImage"
-    ]
-    resources = [
-      "*"
-    ]
-  }
 }
