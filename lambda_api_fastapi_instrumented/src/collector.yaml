@@ -1,0 +1,22 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+exporters:
+  logging:
+    loglevel: debug
+  awsxray:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [awsxray, logging]
+    metrics:
+      receivers: [otlp]
+      exporters: [logging]
+  telemetry:
+    logs:
+      level: debug
