@@ -20,7 +20,7 @@ resource "aws_lambda_function" "api_lambda" {
   function_name = "lambda_api"
   handler       = "lambda.handler"
   runtime       = "python3.8"
-  timeout       = 10
+  timeout       = 60
   role          = aws_iam_role.lambda.arn
 
   layers = [
@@ -32,6 +32,10 @@ resource "aws_lambda_function" "api_lambda" {
       AWS_LAMBDA_EXEC_WRAPPER             = "/opt/otel-instrument"
       OPENTELEMETRY_COLLECTOR_CONFIG_FILE = "/var/task/collector.yaml"
       OTEL_BSP_MAX_EXPORT_BATCH_SIZE      = 1
+      OTEL_TRACES_SAMPLER                 = "Always_on"
+      OTEL_PYTHON_ID_GENERATOR            = "xray"
+      OTEL_PROPAGATORS                    = "xray"
+      OTEL_EXPORTER_OTLP_ENDPOINT         = "127.0.0.1:4317"
     }
   }
 

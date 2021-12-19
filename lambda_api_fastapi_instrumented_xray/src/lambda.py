@@ -8,16 +8,7 @@ import os
 from fastapi import FastAPI
 from mangum import Mangum
 
-from opentelemetry import trace
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-
-
 
 app = FastAPI(
     title="AWS + FastAPI",
@@ -39,12 +30,6 @@ def hello():
     client.describe_instances()
 
     return {"Region ": os.environ['AWS_REGION']}  
-
-trace.set_tracer_provider(TracerProvider(resource=Resource.create({"service.name": "open-telemetry-test"})))
-span_processor = BatchSpanProcessor(
-    OTLPSpanExporter(endpoint="http://localhost:4317")
-)
-trace.get_tracer_provider().add_span_processor(span_processor)
 
 FastAPIInstrumentor.instrument_app(app)
 # Mangum allows us to use Lambdas to process requests
