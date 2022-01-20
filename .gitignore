@@ -1,3 +1,5 @@
 .terraform*
 terraform.tfstate*
 dist
+otel-layer.zip
+.build

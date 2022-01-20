@@ -7,7 +7,6 @@ import os
 
 from fastapi import FastAPI
 from mangum import Mangum
-
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 app = FastAPI(
@@ -30,6 +29,7 @@ def hello():
     client.describe_instances()
 
     return {"Region ": os.environ['AWS_REGION']}  
+
 
 FastAPIInstrumentor.instrument_app(app)
 # Mangum allows us to use Lambdas to process requests

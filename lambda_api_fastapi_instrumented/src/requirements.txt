@@ -1,0 +1,7 @@
+boto3==1.17.*
+fastapi==0.67.0
+mangum==0.12.1
+opentelemetry-sdk==1.7.1
+opentelemetry-distro==0.26b1
+opentelemetry-instrumentation==0.26b1
+opentelemetry-instrumentation-fastapi==0.26b1

@@ -31,6 +31,7 @@ def hello():
 
     return {"Region ": os.environ['AWS_REGION']}  
 
+
 FastAPIInstrumentor.instrument_app(app)
 # Mangum allows us to use Lambdas to process requests
 handler = Mangum(app=app)
